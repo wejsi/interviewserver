@@ -1,0 +1,1 @@
+java -cp "%USERPROFILE%\.m2\repository\org\hsqldb\hsqldb-j5\2.2.4\hsqldb-j5-2.2.4.jar" -Duser.timezone=UTC org.hsqldb.server.Server -database.0 file:target/db/dbinterview -dbname.0 dbinterview
