@@ -42,10 +42,11 @@
 		</dependency>
 		 
 		 <dependency>
-	        <groupId>org.hsqldb</groupId>
-	        <artifactId>hsqldb</artifactId>
-	        <version>2.2.4</version>
-	     </dependency>
+		    <groupId>org.hsqldb</groupId>
+		    <artifactId>hsqldb-j5</artifactId>
+		    <version>2.2.4</version>
+		    <scope>test</scope>
+		</dependency>
 
     </dependencies>
 </project>
