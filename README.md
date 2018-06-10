@@ -15,15 +15,21 @@ Arquitetura:
 Instruções:
     
     1. Na raiz do projeto executar o comando mvn install para obter as dependências necessárias.
+   
     2. Importar o projeto no eclipse como um projeto maven.
+    
     3. Iniciar a conexão com o banco de dados executando hsqldb.bat
    
-    4. Localizar e executar a classe Main Application.java
+    4. Localizar e executar a classe Main src/main/java/org/interview/config/Application.java
     
     5. A autorização básica para os endpoints é usuário:admin senha:admin.
     
+    6. Existe uma carga de colaboradores consulta tabela PUBLIC.COL_COLABORADOR.
+    
+    
 URLs:
-
+    user=admin
+    password=admin
     id=COL_ID
 
 Obtém colaborador:
