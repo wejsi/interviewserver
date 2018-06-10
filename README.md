@@ -26,16 +26,16 @@ URLs:
 
     id=COL_ID
 
-Obtém colaborador
+Obtém colaborador:
      GET
      Http://localhost:8080/api/ponto/colaborador/{id}
 
 
-Obtém colaboradores
+Obtém colaboradores.
      GET
      Http:/localhost:8080/api/ponto/colaboradores
 
-Registrar ponto
+Registrar ponto do colaborador.
      PUT
      Http://localhost:8080/api/ponto/colaborador/{id}/registrar
 
