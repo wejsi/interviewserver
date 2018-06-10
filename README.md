@@ -20,7 +20,7 @@ Instruções:
    
     4. Localizar e executar a classe Main Application.java
     
-    5. A autorização básica para os endpoints é usuário admin senha: admin.
+    5. A autorização básica para os endpoints é usuário:admin senha:admin.
     
   
   
