@@ -11,11 +11,23 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 
+/***
+ * Classe responsável pela configuração do datasource.
+ * 
+ * @author weslen.silva
+ *
+ */
 @Configuration
 @EnableJpaRepositories(DBServerConfiguration.DB_SCAN)
 public class DBServerConfiguration {
 	public static final String DB_SCAN = "org.interview.db";
 
+	/***
+	 * Bean responsável pela definição do datasouce. Visto que foi escolhido HSQLDB.
+	 * 
+	 * @return dataSource
+	 * @throws Exception
+	 */
 	@Bean
 	public DataSource dataSource() throws Exception {
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
@@ -26,12 +38,16 @@ public class DBServerConfiguration {
 		return dataSource;
 	}
 
+	/***
+	 * Bean responsável pela configuração do datasource.
+	 * 
+	 * @param dataSource
+	 * @return entityManagerFactoryBean
+	 */
 	@Bean
-	public LocalContainerEntityManagerFactoryBean entityManagerFactory(
-			DataSource dataSource) {
+	public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource) {
 		Properties properties = new Properties();
-		properties
-				.put("hibernate.dialect", "org.hibernate.dialect.HSQLDialect");
+		properties.put("hibernate.dialect", "org.hibernate.dialect.HSQLDialect");
 		properties.put("hibernate.default_schema", "PUBLIC");
 		properties.put("hibernate.show_sql", "true");
 		properties.put("hibernate.format_sql", "false");
@@ -41,8 +57,9 @@ public class DBServerConfiguration {
 		entityManagerFactoryBean.setDataSource(dataSource);
 
 		entityManagerFactoryBean.setJpaProperties(properties);
-		entityManagerFactoryBean
-				.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
+		entityManagerFactoryBean.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
+
+		// Escaneando entidades do pacote DB_SCAN.
 		entityManagerFactoryBean.setPackagesToScan(DB_SCAN);
 
 		return entityManagerFactoryBean;

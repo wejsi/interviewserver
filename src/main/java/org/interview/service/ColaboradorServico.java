@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.interview.controller.vo.ClockDetails;
+import org.interview.controller.vo.TempoEventoVO;
 import org.interview.db.Colaborador;
 import org.interview.db.Evento;
 import org.interview.helpers.ValidadorHelper;
@@ -38,6 +38,13 @@ public class ColaboradorServico {
 		return colaboradorRepo.findAll();
 	}
 
+	/***
+	 * Obtém as horas trabalhadas do dia pelo colaborador.
+	 * 
+	 * @param idColaborador
+	 * @return
+	 * @throws Exception
+	 */
 	@Transactional(readOnly = true)
 	public Object obterHorasTrabalhadasDia(String idColaborador) throws Exception {
 		ValidadorHelper.validarIdentificador(idColaborador);
@@ -49,7 +56,13 @@ public class ColaboradorServico {
 		return calcularEventosDia(eventos);
 	}
 
-	public ClockDetails calcularEventosDia(List<Evento> eventos) {
+	/***
+	 * Calcula total de horas trabalhadas do dia.
+	 * 
+	 * @param eventos
+	 * @return TempoEventoVO
+	 */
+	public TempoEventoVO calcularEventosDia(List<Evento> eventos) {
 		LocalDateTime dtIniExp = null;
 		LocalDateTime dtFimExp = null;
 		LocalDateTime dtIniDesc = null;
@@ -76,11 +89,11 @@ public class ColaboradorServico {
 		return obterClock(segundosTrabalhados);
 	}
 
-	private ClockDetails obterClock(long segundosTrabalhados) {
+	private TempoEventoVO obterClock(long segundosTrabalhados) {
 		long hora = segundosTrabalhados / SEGUNDOS_POR_HORA;
 		long minuto = ((segundosTrabalhados % SEGUNDOS_POR_HORA) / SECONDOS_POR_MINUTE);
 		long segundo = (segundosTrabalhados % SECONDOS_POR_MINUTE);
-		return new ClockDetails(parseLongInteger(hora), parseLongInteger(minuto), parseLongInteger(segundo));
+		return new TempoEventoVO(parseLongInteger(hora), parseLongInteger(minuto), parseLongInteger(segundo));
 	}
 
 	private long obterSegundosTrabalhados(LocalDateTime dtIniExp, LocalDateTime dtFimExp, LocalDateTime dtIniDesc,
@@ -147,6 +160,12 @@ public class ColaboradorServico {
 		}
 	}
 
+	/***
+	 * Verifica horas adicionais do sábado.
+	 * 
+	 * @param dtIniExp
+	 * @return
+	 */
 	private boolean existeAdicionalDomingo(LocalDateTime dtIniExp) {
 		if (dtIniExp.getDayOfWeek().ordinal() == DOMINGO) {
 			return true;
@@ -154,6 +173,12 @@ public class ColaboradorServico {
 		return false;
 	}
 
+	/***
+	 * Verifica horas adicionais do domingo.
+	 * 
+	 * @param dtIniExp
+	 * @return
+	 */
 	private boolean existeAdicionalSabado(LocalDateTime dtIniExp) {
 		if (dtIniExp.getDayOfWeek().ordinal() == SABADO) {
 			return true;
@@ -161,18 +186,43 @@ public class ColaboradorServico {
 		return false;
 	}
 
+	/***
+	 * Obtem segundos tarbalhados noturno
+	 * 
+	 * @param seconds
+	 * @return
+	 */
 	private long obterSegundosTrabalhadosNoturno(long seconds) {
 		return (long) (seconds + (seconds * (0.2)));
 	}
 
+	/***
+	 * Obtem segundos trabalhados no domingo.
+	 * 
+	 * @param seconds
+	 * @return
+	 */
 	private long obterSegundosTrabalhadosDomingo(long seconds) {
 		return (long) (seconds * 2);
 	}
 
+	/***
+	 * Obtem segundos trabalhados no sábado.
+	 * 
+	 * @param seconds
+	 * @return
+	 */
 	private long obterSegundosTrabalhadosSabado(long seconds) {
 		return (long) (seconds + (seconds * (0.5)));
 	}
 
+	/***
+	 * Verifica se existe adicional noturno
+	 * 
+	 * @param dtFimExp
+	 * @param dtFimDesc
+	 * @return true ou false
+	 */
 	private boolean existeAdicionalNoturno(LocalDateTime dtFimExp, LocalDateTime dtFimDesc) {
 		boolean after = dtFimDesc.isAfter(
 				LocalDateTime.of(dtFimDesc.getYear(), dtFimDesc.getMonth(), dtFimDesc.getDayOfMonth(), 22, 0, 0));
@@ -189,6 +239,13 @@ public class ColaboradorServico {
 		return Optional.ofNullable(valor).map(Long::intValue).orElse(null);
 	}
 
+	/***
+	 * Obtém as horas trabalhadas do dia pelo colaborador.
+	 * 
+	 * @param idColaborador
+	 * @return TempoEventoVO
+	 * @throws Exception
+	 */
 	public Object obterHorasTrabalhadasMes(String idColaborador) throws Exception {
 		ValidadorHelper.validarIdentificador(idColaborador);
 		List<Evento> eventos = eventoRepo.findAll();
@@ -200,7 +257,7 @@ public class ColaboradorServico {
 						&& evn.getDataEvento().getMonth().equals(LocalDate.now().getMonth())))
 				.collect(Collectors.toCollection(() -> new ArrayList<Evento>()));
 
-		List<ClockDetails> clocksDiario = new LinkedList<ClockDetails>();
+		List<TempoEventoVO> clocksDiario = new LinkedList<TempoEventoVO>();
 		List<Evento> eventosDoDia = new LinkedList<Evento>();
 		for (Evento evento : eventosFiltrados) {
 			if (eventosDoDia.contains(evento)) {
@@ -211,7 +268,7 @@ public class ColaboradorServico {
 			clocksDiario.add(calcularEventosDia(eventosDoDia));
 		}
 		long seconds = 0L;
-		for (ClockDetails clockVO : clocksDiario) {
+		for (TempoEventoVO clockVO : clocksDiario) {
 			long segundosClock = (clockVO.getHora() * 3600) + (clockVO.getMinuto() * 60) + clockVO.getSegundo();
 			seconds += segundosClock;
 		}

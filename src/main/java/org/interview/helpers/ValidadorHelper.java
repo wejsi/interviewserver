@@ -2,7 +2,7 @@ package org.interview.helpers;
 
 import java.util.List;
 
-import org.interview.controller.vo.ClockDetails;
+import org.interview.controller.vo.TempoEventoVO;
 import org.interview.db.Evento;
 import org.springframework.util.StringUtils;
 
@@ -11,12 +11,24 @@ public class ValidadorHelper {
 	private static final int SEGUNDOS_MINUTOS = 60;
 	private static final int SEGUNDOS_HORA = 3600;
 
+	/***
+	 * Valida identificador do colaborador.
+	 * 
+	 * @param idColaborador
+	 */
 	public static void validarIdentificador(String idColaborador) {
 		if (StringUtils.isEmpty(idColaborador)) {
 			throw new IllegalArgumentException("Identificador é obrigatório");
 		}
 	}
 
+	/***
+	 * Valida existencia de eventos do colaborador.
+	 * 
+	 * @param idColaborador
+	 * @param eventos
+	 * @throws Exception
+	 */
 	public static void validarExistenciaEventos(String idColaborador, List<Evento> eventos) throws Exception {
 		validarIdentificador(idColaborador);
 		if (eventos == null || eventos.isEmpty()) {
@@ -24,12 +36,20 @@ public class ValidadorHelper {
 		}
 	}
 
-	public static void validarFimDescanso(ClockDetails eventosCalculadosDia, long segundosDescansados)
+	/***
+	 * Valida intervalo de descanso.
+	 * 
+	 * @param eventosCalculadosDia
+	 * @param segundosDescansados
+	 * @throws Exception
+	 */
+	public static void validarIntervaloDoDescanso(TempoEventoVO eventosCalculadosDia, long segundosDescansados)
 			throws Exception {
 
 		int h = eventosCalculadosDia.getHora();
 		int m = eventosCalculadosDia.getMinuto();
 		int s = eventosCalculadosDia.getSegundo();
+
 		int totalSegundos = (h * SEGUNDOS_HORA) + (m * SEGUNDOS_MINUTOS) + s;
 
 		int totalSegundosQuatroHoras = 4 * SEGUNDOS_HORA;

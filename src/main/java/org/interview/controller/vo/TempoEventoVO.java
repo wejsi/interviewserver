@@ -1,15 +1,15 @@
 package org.interview.controller.vo;
 
-public class ClockDetails {
+public class TempoEventoVO {
 	private int hora;
 	private int minuto;
 	private int segundo;
 
-	public ClockDetails() {
+	public TempoEventoVO() {
 
 	}
 
-	public ClockDetails(int hora, int minuto, int segundo) {
+	public TempoEventoVO(int hora, int minuto, int segundo) {
 		super();
 		this.hora = hora;
 		this.minuto = minuto;

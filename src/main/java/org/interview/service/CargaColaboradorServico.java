@@ -7,13 +7,22 @@ import org.interview.repository.ColaboradorRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/***
+ * Classe responsável pela carga de dados do colaborador.
+ * 
+ * @author weslen.silva
+ *
+ */
 @Service
-public class CargaServico {
+public class CargaColaboradorServico {
 
 	@Autowired
 	private ColaboradorRepo colaboradorRepo;
 
-	public void carregarColaboradores() {
+	/***
+	 * Construir e cadastrar colaboradores.
+	 */
+	public void buildColaboradores() {
 		Colaborador c1 = new Colaborador("12083924837", "Joao");
 		Colaborador c2 = new Colaborador("12055473249", "Maria");
 		Colaborador c3 = new Colaborador("12031314892", "Pedro");
@@ -24,8 +33,7 @@ public class CargaServico {
 		Colaborador c8 = new Colaborador("12081175233", "Ricardo");
 		Colaborador c9 = new Colaborador("12061634640", "Roberta");
 		Colaborador c10 = new Colaborador("12063168140", "Ana");
-		colaboradorRepo.save(Arrays.asList(c1, c2, c3, c4, c5, c6, c7, c8, c9,
-				c10));
+		colaboradorRepo.save(Arrays.asList(c1, c2, c3, c4, c5, c6, c7, c8, c9, c10));
 
 	}
 }

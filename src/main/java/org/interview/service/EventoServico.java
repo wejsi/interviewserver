@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.interview.controller.vo.ClockDetails;
+import org.interview.controller.vo.TempoEventoVO;
 import org.interview.db.Colaborador;
 import org.interview.db.Evento;
 import org.interview.db.TipoEvento;
@@ -20,6 +20,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+/***
+ * Classe responsável pelo negócio da aplicação.
+ * 
+ * @author weslen.silva
+ *
+ */
 @Service
 public class EventoServico {
 
@@ -32,6 +38,13 @@ public class EventoServico {
 	@Autowired
 	private ColaboradorServico colaboradorServico;
 
+	/***
+	 * Registra um evento do colaborador.
+	 * 
+	 * @param idColaborador
+	 * @return evento
+	 * @throws Exception
+	 */
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
 	public Evento registrar(String idColaborador) throws Exception {
 		Colaborador colaborador = colaboradorRepo.getOne(idColaborador);
@@ -41,6 +54,20 @@ public class EventoServico {
 		return e;
 	}
 
+	/***
+	 * Processa e cria um evento distribuindo pelo tipo de evento. <br>
+	 * <dd>Caso evento seja disparado novamente o usuário terá como retorno a
+	 * mensagen de erro:
+	 * <ul>
+	 * <li>"Você registrou o ponto recentemente favor aguardar ao menos de 1
+	 * minuto."</li>
+	 * </ul>
+	 * 
+	 * @param colaborador
+	 * @param eventos
+	 * @return
+	 * @throws Exception
+	 */
 	private Evento processarEvento(Colaborador colaborador, List<Evento> eventos) throws Exception {
 		Evento e = null;
 		validarExpediente(eventos);
@@ -55,9 +82,9 @@ public class EventoServico {
 				} else {
 					if (EventoHelper.existeEventoInicioDescanso(eventos)) {
 
-						ClockDetails eventosCalculadosDia = colaboradorServico.calcularEventosDia(eventos);
+						TempoEventoVO eventosCalculadosDia = colaboradorServico.calcularEventosDia(eventos);
 						long totalSegundosDescansados = obterSegundosDescanso(eventos);
-						ValidadorHelper.validarFimDescanso(eventosCalculadosDia, totalSegundosDescansados);
+						ValidadorHelper.validarIntervaloDoDescanso(eventosCalculadosDia, totalSegundosDescansados);
 
 						e = gerarEvento(colaborador, TipoEvento.FIM_DESCANSO);
 					} else {
@@ -87,6 +114,12 @@ public class EventoServico {
 		return Duration.between(dtIniDesc, dtFimDesc).getSeconds();
 	}
 
+	/***
+	 * Valida expediente do dia.
+	 * 
+	 * @param eventos
+	 * @throws Exception
+	 */
 	private void validarExpediente(List<Evento> eventos) throws Exception {
 		if (eventos.size() == 4) {
 			throw new Exception("Você já encerrou o expediente.");

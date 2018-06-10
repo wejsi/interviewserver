@@ -1,6 +1,6 @@
 package org.interview.config;
 
-import org.interview.service.CargaServico;
+import org.interview.service.CargaColaboradorServico;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -23,16 +23,26 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 public class Application extends SpringBootServletInitializer {
 
 	@Autowired
-	private CargaServico cargaServico;
+	private CargaColaboradorServico cargaServico;
 
+	/***
+	 * Responsável pelo inicio da aplicação. Visto que iniciará o serviço.
+	 * 
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
 	}
 
+	/***
+	 * Criação de carga inicial para colaboradores.
+	 * 
+	 * @return
+	 */
 	@Bean
 	InitializingBean cargaInicial() {
 		return () -> {
-			cargaServico.carregarColaboradores();
+			cargaServico.buildColaboradores();
 		};
 	}
 

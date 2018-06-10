@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.interview.db.Colaborador;
+import org.interview.db.Evento;
 import org.interview.service.ColaboradorServico;
 import org.interview.service.EventoServico;
 import org.interview.utils.DataUtil;
@@ -16,6 +17,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+/***
+ * Classe responsável pelo controle e definição dos endpoints referente ao ponto
+ * do colaborador.
+ * 
+ * @author weslen.silva
+ *
+ */
 @RestController
 @RequestMapping("api/ponto")
 public class ColaboradorController {
@@ -26,6 +34,11 @@ public class ColaboradorController {
 	@Autowired
 	private EventoServico eventoServico;
 
+	/***
+	 * Obtém lista de todos os colaboradores cadastrados.
+	 * 
+	 * @return ResponseEntity<?>.
+	 */
 	@RequestMapping(path = "/colaboradores", method = RequestMethod.GET)
 	public ResponseEntity<?> obterColaboradores() {
 		try {
@@ -35,6 +48,12 @@ public class ColaboradorController {
 		}
 	}
 
+	/***
+	 * Obtém o colaborador cadastrado pelo id.
+	 * 
+	 * @param id
+	 * @return ResponseEntity<?>.
+	 */
 	@RequestMapping(path = "/colaborador/{id}", method = RequestMethod.GET)
 	public ResponseEntity<?> obterColaborador(@PathVariable(value = "id") String id) {
 		try {
@@ -46,15 +65,28 @@ public class ColaboradorController {
 
 	}
 
+	/***
+	 * Registra evento(Apontamento) do colaborador cadastrado pelo id.
+	 * 
+	 * @param id
+	 * @return ResponseEntity<?>.
+	 */
 	@RequestMapping(path = "/colaborador/{id}/registrar", method = RequestMethod.PUT)
-	public ResponseEntity<Object> registrar(@PathVariable String id) {
+	public ResponseEntity<?> registrar(@PathVariable String id) {
 		try {
-			return new ResponseEntity<Object>(eventoServico.registrar(id), HttpStatus.OK);
+			return new ResponseEntity<Evento>(eventoServico.registrar(id), HttpStatus.OK);
 		} catch (Exception e) {
 			return trataErros(e);
 		}
 	}
 
+	/***
+	 * Obtém a quantidade de horas diária trabalhadas do colaborador cadastrado pelo
+	 * id.
+	 * 
+	 * @param id
+	 * @return ResponseEntity<?>.
+	 */
 	@RequestMapping(path = "/colaborador/{id}/total-horas-dia", method = RequestMethod.GET)
 	public ResponseEntity<?> obterHorasDia(@PathVariable String id) {
 		try {
@@ -64,6 +96,13 @@ public class ColaboradorController {
 		}
 	}
 
+	/***
+	 * Obtém a quantidade de horas mensal trabalhadas do colaborador cadastrado pelo
+	 * id.
+	 * 
+	 * @param id
+	 * @return ResponseEntity<?>.
+	 */
 	@RequestMapping(path = "/colaborador/{id}/total-horas-mes", method = RequestMethod.GET)
 	public ResponseEntity<?> obterHorasMes(@PathVariable String id) {
 		try {
@@ -73,12 +112,23 @@ public class ColaboradorController {
 		}
 	}
 
+	/***
+	 * Trata erros de execução.
+	 * 
+	 * @param e
+	 * @return ResponseEntity<?>.
+	 */
 	private ResponseEntity<Object> trataErros(Exception e) {
 		return new ResponseEntity<Object>(
 				new ErrorDetails(DataUtil.formatarDateTime(LocalDateTime.now()), e.getMessage()),
 				HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
+	/***
+	 * Obtém todos colaboradores.
+	 * 
+	 * @return
+	 */
 	private List<Colaborador> getColaboradores() {
 		return colaboradorServico.obterTodos();
 	}
