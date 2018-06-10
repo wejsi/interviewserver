@@ -42,7 +42,7 @@ Obtém colaborador:
 
 Obtém colaboradores.
      GET
-     Http:/localhost:8080/api/ponto/colaboradores
+     Http://localhost:8080/api/ponto/colaboradores
 
 Registrar ponto do colaborador.
      PUT
